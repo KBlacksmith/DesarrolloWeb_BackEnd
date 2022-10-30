@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI_Peliculas.Entidades;
+using WebAPI_Peliculas.Services;
+using WebAPI_Peliculas.Filtros;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI_Peliculas.Controllers
 {
@@ -9,13 +12,53 @@ namespace WebAPI_Peliculas.Controllers
     public class DirectoresController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
-        public DirectoresController(ApplicationDbContext context)
+        private readonly IService service;
+        private readonly ServiceTransient serviceTransient;
+        private readonly ServiceScoped serviceScoped;
+        private readonly ServiceSingleton serviceSingleton;
+        private readonly ILogger<DirectoresController> logger;
+        private readonly IWebHostEnvironment env;
+        private readonly string nuevosRegistros = "nuevosRegistros.txt";
+        private readonly string registrosConsultados = "registrosConsultados.txt";
+        public DirectoresController(ApplicationDbContext context, IService service, 
+        ServiceTransient serviceTransient, ServiceScoped serviceScoped, 
+        ServiceSingleton serviceSingleton, ILogger<DirectoresController> logger, 
+        IWebHostEnvironment env)
         {
             this.dbContext = context;
+            this.service = service;
+            this.serviceTransient = serviceTransient;
+            this.serviceScoped = serviceScoped;
+            this.serviceSingleton = serviceSingleton;
+            this.logger = logger;
+            this.env = env;
         }
+
+        [HttpGet("GUID")]
+        [ResponseCache(Duration = 10)]
+        [ServiceFilter(typeof(FiltroDeAccion))]
+        public ActionResult ObtenerGuid()
+        {
+            throw new NotImplementedException();
+            logger.LogInformation("Durante la ejecución");
+            return Ok(new{
+                DirectoresControllerTransient = serviceTransient.guid,
+                ServiceA_Transient = service.GetTransient(),
+                DirectoresControllerScoped = serviceScoped.guid,
+                ServiceA_Scoped = service.GetScoped(),
+                DirectoresControllerSingleton = serviceSingleton.guid,
+                ServiceA_Singleton = service.GetSingleton()
+            });
+        }
+
         [HttpGet]
+        [ServiceFilter(typeof(FiltroDeAccion))]
         public async Task<ActionResult<List<Director>>> GetAll()
         {
+            throw new NotImplementedException();
+            logger.LogInformation("Se obtiene el listado de películas");
+            logger.LogWarning("Mensaje de prueba warning");
+            service.EjecutarJob();
             return await dbContext.Directores.Include(x => x.peliculas).ToListAsync();
         }
         [HttpGet("{id:int}")]

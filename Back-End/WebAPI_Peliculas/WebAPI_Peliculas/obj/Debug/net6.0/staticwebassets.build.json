@@ -1,11 +1,37 @@
 {
   "Version": 1,
-  "Hash": "PInV9e7WFQePThObEyA+QVbIWxM9gTVn/y7XaABE+Jo=",
+  "Hash": "qrYvuaeMD/a0l9q921GsEslzCtsQKNDY8aJRaKSz5JA=",
   "Source": "WebAPI_Peliculas",
   "BasePath": "_content/WebAPI_Peliculas",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "WebAPI_Peliculas\\wwwroot",
+      "Source": "WebAPI_Peliculas",
+      "ContentRoot": "C:\\Users\\kenne\\OneDrive\\Documentos\\Universidad\\Back-End\\WebAPI_Peliculas\\WebAPI_Peliculas\\wwwroot\\",
+      "BasePath": "_content/WebAPI_Peliculas",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\kenne\\OneDrive\\Documentos\\Universidad\\Back-End\\WebAPI_Peliculas\\WebAPI_Peliculas\\wwwroot\\Peliculas.txt",
+      "SourceId": "WebAPI_Peliculas",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\kenne\\OneDrive\\Documentos\\Universidad\\Back-End\\WebAPI_Peliculas\\WebAPI_Peliculas\\wwwroot\\",
+      "BasePath": "_content/WebAPI_Peliculas",
+      "RelativePath": "Peliculas.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Peliculas.txt"
+    }
+  ]
 }

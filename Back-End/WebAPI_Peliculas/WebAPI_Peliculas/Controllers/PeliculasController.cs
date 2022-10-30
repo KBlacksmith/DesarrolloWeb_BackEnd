@@ -9,9 +9,11 @@ namespace WebAPI_Peliculas.Controllers
     public class PeliculasController: ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
-        public PeliculasController(ApplicationDbContext context)
+        private readonly ILogger<PeliculasController> log;
+        public PeliculasController(ApplicationDbContext context, ILogger<PeliculasController> log)
         {
             this.dbContext = context;
+            this.log = log;
         }
 
         [HttpGet]
@@ -19,6 +21,7 @@ namespace WebAPI_Peliculas.Controllers
         [HttpGet("/listado")]
         public async Task<ActionResult<List<Pelicula>>> Get()
         {
+            log.LogInformation("Obteniendo listado de películas");
             return await dbContext.Peliculas.Include(x => x.Titulo).ToListAsync();
         }
         [HttpGet("primero")]
@@ -35,6 +38,7 @@ namespace WebAPI_Peliculas.Controllers
             {
                 return NotFound("No se encontró la película con id " + id.ToString());
             }
+            log.LogInformation("El ID es: "+id.ToString());
             return pelicula;
         }
         [HttpGet("{titulo}")]
