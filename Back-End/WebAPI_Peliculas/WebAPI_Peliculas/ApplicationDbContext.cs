@@ -10,5 +10,6 @@ namespace WebAPI_Peliculas
 
         }
         public DbSet<Pelicula> Peliculas { get; set; }
+        public DbSet<Director> Directores { get; set; }
     }
 }

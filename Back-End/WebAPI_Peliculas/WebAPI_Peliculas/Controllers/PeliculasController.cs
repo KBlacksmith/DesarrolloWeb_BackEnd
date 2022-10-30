@@ -15,13 +15,46 @@ namespace WebAPI_Peliculas.Controllers
         }
 
         [HttpGet]
+        [HttpGet("listado")]
+        [HttpGet("/listado")]
         public async Task<ActionResult<List<Pelicula>>> Get()
         {
-            return await dbContext.Peliculas.ToListAsync();
+            return await dbContext.Peliculas.Include(x => x.Titulo).ToListAsync();
+        }
+        [HttpGet("primero")]
+        public async Task<ActionResult<Pelicula>> GetPrimerPelicula()
+        {
+            //var vacio = await dbContext.Peliculas.
+            return await dbContext.Peliculas.FirstOrDefaultAsync();
+        }
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Pelicula>> GetById(int id)
+        {
+            var pelicula = await dbContext.Peliculas.FirstOrDefaultAsync(x => x.Id == id);
+            if(pelicula == null)
+            {
+                return NotFound("No se encontró la película con id " + id.ToString());
+            }
+            return pelicula;
+        }
+        [HttpGet("{titulo}")]
+        public async Task<ActionResult<Pelicula>> GetByTitle([FromRoute] string titulo)
+        {
+            var pelicula = await dbContext.Peliculas.FirstOrDefaultAsync(x => x.Titulo == titulo);
+            if(pelicula == null)
+            {
+                return NotFound("No se encontró la película \"" + titulo + "\"");
+            }
+            return pelicula;
         }
         [HttpPost]
         public async Task<ActionResult> Post(Pelicula pelicula)
         {
+            var existeDirector = await dbContext.Directores.AnyAsync(x => x.Id == pelicula.DirectorId);
+            if (!existeDirector)
+            {
+                return BadRequest("No existe el director con el ID "+pelicula.DirectorId.ToString());
+            }
             dbContext.Add(pelicula);
             await dbContext.SaveChangesAsync();
             return Ok();
@@ -29,7 +62,12 @@ namespace WebAPI_Peliculas.Controllers
         [HttpPut("{id:int}")]//api/peliculas/1
         public async Task<ActionResult> Put(Pelicula pelicula, int id)
         {
-            if(pelicula.Id != id)
+            var exists = await dbContext.Peliculas.AnyAsync(x => x.Id == id);
+            if (!exists)
+            {
+                return NotFound("La pelicula especificado no existe");
+            }
+            if (pelicula.Id != id)
             {
                 return BadRequest("El id de la película no coincide con el establecido en la url");
             }
