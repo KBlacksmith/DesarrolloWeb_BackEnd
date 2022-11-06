@@ -22,7 +22,9 @@ namespace WebAPI_Peliculas.Controllers
         public async Task<ActionResult<List<Pelicula>>> Get()
         {
             log.LogInformation("Obteniendo listado de películas");
-            return await dbContext.Peliculas.Include(x => x.Titulo).ToListAsync();
+
+            /* return await dbContext.Peliculas.Include(x => x.Titulo).ToListAsync();*/
+            return await dbContext.Peliculas.ToListAsync();
         }
         [HttpGet("primero")]
         public async Task<ActionResult<Pelicula>> GetPrimerPelicula()
@@ -51,6 +53,17 @@ namespace WebAPI_Peliculas.Controllers
             }
             return pelicula;
         }
+        [HttpGet("{param?}")]
+        public async Task<ActionResult<Pelicula>> GetParam(int id, string param)
+        {
+            var pelicula = await dbContext.Peliculas.FirstOrDefaultAsync(x => x.Id == id);
+            if(pelicula == null)
+            {
+                return NotFound("No se encontró la película con id '" + id.ToString() + "'");
+            }
+            return pelicula;
+        }
+        
         [HttpPost]
         public async Task<ActionResult> Post(Pelicula pelicula)
         {

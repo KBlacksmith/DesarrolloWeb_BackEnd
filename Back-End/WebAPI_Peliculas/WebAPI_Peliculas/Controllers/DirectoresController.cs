@@ -39,7 +39,7 @@ namespace WebAPI_Peliculas.Controllers
         [ServiceFilter(typeof(FiltroDeAccion))]
         public ActionResult ObtenerGuid()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             logger.LogInformation("Durante la ejecución");
             return Ok(new{
                 DirectoresControllerTransient = serviceTransient.guid,
@@ -55,7 +55,7 @@ namespace WebAPI_Peliculas.Controllers
         [ServiceFilter(typeof(FiltroDeAccion))]
         public async Task<ActionResult<List<Director>>> GetAll()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             logger.LogInformation("Se obtiene el listado de películas");
             logger.LogWarning("Mensaje de prueba warning");
             service.EjecutarJob();
@@ -65,6 +65,19 @@ namespace WebAPI_Peliculas.Controllers
         public async Task<ActionResult<Director>> GetById(int id)
         {
             return await dbContext.Directores.FirstOrDefaultAsync(x => x.Id == id);
+        }
+        [HttpGet("obtenerDirector/{nombre}")]
+        public async Task<ActionResult<Director>> GetD([FromRoute] string nombre)
+        {
+            var director = await dbContext.Directores.FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
+            if (director == null)
+            {
+                logger.LogError("No se encontro al director \"" + nombre + "\"");
+                return NotFound();
+            }
+            var ruta = $@"{env.ContentRootPath}\wwwroot\{registrosConsultados}";
+            using (StreamWriter writer = new StreamWriter(ruta, append: true)) { writer.WriteLine(director.Id + " " + director.Nombre); }
+            return director;
         }
         [HttpPost]
         public async Task<ActionResult> Post(Director director)
